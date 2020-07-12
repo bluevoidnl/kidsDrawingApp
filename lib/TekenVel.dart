@@ -3,14 +3,6 @@ import 'package:flutter/material.dart';
 class TekenVel extends CustomPainter {
   TekenVel();
 
-  final colorsRainbow = <Color>[
-    Colors.yellow,
-    Colors.orange,
-    Colors.red,
-    Colors.purple,
-    Colors.blue,
-  ];
-
   final rodeLijn = Paint()
     ..color = Colors.red
     ..style = PaintingStyle.stroke
@@ -30,7 +22,7 @@ class TekenVel extends CustomPainter {
     // Typen vanaf hier =================================================================
 
     // kleur achtergrond
-    var rechthoekAlles = Offset.zero & velMaat;
+    var rechthoekAlles =  Offset.zero & velMaat;
     vel.drawRect(rechthoekAlles, geelVul);
 
     // teken een rode lijn
@@ -43,14 +35,15 @@ class TekenVel extends CustomPainter {
     //  }
 
     // cirkel
-    // vel.drawCircle(Offset(100,100), 50, blauwVul);
-
-    // rechthoek
-    var rechthoek = Rect.fromPoints(Offset(100, 300), Offset(100, 350));
-    vel.drawRect(rechthoek, blauwVul);
+    vel.drawCircle(Offset(100, 100), 50, blauwVul);
 
     // tekst
-    // drawText("Hoi", Colors.purple, velMaat, vel, Offset(200,100));
+    drawText("Hoi", Colors.purple, vel, Offset(200, 100));
+
+    // rechthoek
+    var rechthoek = Rect.fromPoints(Offset(100, 300), Offset(200, 350));
+    var kleur = regenboogVul(Offset(100, 300), Offset(200, 350));
+     vel.drawRect(rechthoek, kleur);
 
     // Hieronder niet typen ======================================================================
   }
@@ -60,7 +53,7 @@ class TekenVel extends CustomPainter {
     return false;
   }
 
-  void drawText(String text, Color color, Size size, Canvas canvas, Offset offset) {
+  void drawText(String text, Color color, Canvas canvas, Offset offset) {
     final textStyle = TextStyle(
       color: color,
       fontSize: 30,
@@ -76,9 +69,37 @@ class TekenVel extends CustomPainter {
     );
     textPainter.layout(
       minWidth: 0,
-      maxWidth: size.width,
+      maxWidth: 800,
     );
 
     textPainter.paint(canvas, offset);
+  }
+
+  Paint regenboogLijn(Offset offset1, Offset offset2, {int dikte = 4}) {
+    return regenboog(offset1, offset2, PaintingStyle.stroke, dikte);
+  }
+
+  Paint regenboogVul(Offset offset1, Offset offset2) {
+    return regenboog(offset1, offset2, PaintingStyle.fill, 1);
+  }
+
+  Paint regenboog(Offset offset1, Offset offset2, PaintingStyle paintingStyle, int dikte) {
+    final colorsRainbow = <Color>[
+      Colors.yellow,
+      Colors.orange,
+      Colors.red,
+      Colors.purple,
+      Colors.blue,
+    ];
+    Gradient gradient = new LinearGradient(
+      colors: colorsRainbow,
+      stops: [0.2, 0.4, 0.6, 0.8, 1],
+    );
+    Rect rect = Rect.fromPoints(offset1, offset2);
+
+    return Paint()
+      ..shader = gradient.createShader(rect)
+      ..style = paintingStyle
+      ..strokeWidth = dikte.toDouble();
   }
 }
