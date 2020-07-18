@@ -1,10 +1,7 @@
-import 'dart:developer';
-import 'CanvasExtension.dart';
-
 import 'package:flutter/material.dart';
 
-class TekenVel extends CustomPainter {
-  TekenVel();
+class Klok extends CustomPainter {
+  Klok();
 
   final rodeLijn = Paint()
     ..color = Colors.red
@@ -16,11 +13,6 @@ class TekenVel extends CustomPainter {
     ..color = Colors.amber
     ..style = PaintingStyle.fill;
 
-  final lilaLijn = Paint()
-    ..color = Colors.purpleAccent
-    ..strokeCap = StrokeCap.round
-    ..strokeWidth = 4;
-
   final blauwVul = Paint()
     ..color = Colors.lightBlue
     ..style = PaintingStyle.fill;
@@ -30,41 +22,59 @@ class TekenVel extends CustomPainter {
     // Typen vanaf hier =================================================================
 
     // kleur achtergrond
-    var rechthoekAlles = Rect.fromPoints(Offset.zero, velMaat.bottomRight(Offset.zero));
+    var rechthoekAlles =  Offset.zero & velMaat;
     vel.drawRect(rechthoekAlles, geelVul);
 
     // teken een rode lijn
-   // vel.drawLine(Offset(1, 1), Offset(370, 680), rodeLijn);
+    vel.drawLine(Offset(100, 10), Offset(20, 300), rodeLijn);
 
-    vel.drawCircle(Offset(150, 300),2, blauwVul);
-
-    for (var b = 0.0; b < 500; b = b + 10) {
-      vel.drawLine(Offset(b*10, 1), Offset(1, b*10), rodeLijn);
-      vel.drawCircle(Offset(15+b, 300),2, blauwVul);
-    }
-//    for (var x = 0.0; x < 500; x = x + 20) {
-//      for (var y = 0.0; y < 500; y = y + 20) {
-//        vel.drawCircle(Offset(x, y), 2, blauwVul);
-//      }
-//    }
+    // herhaling
+    // for (var teller = 0.0; teller < 300; teller += 10)
+    //  {
+    //    vel.drawLine(Offset(100 , 10 ), Offset(20, 300), rodeLijn);
+    //  }
 
     // cirkel
-    // vel.drawCircle(Offset(100, 100), 50, blauwVul);
+    vel.drawCircle(Offset(100, 100), 50, blauwVul);
 
     // tekst
-    vel.drawText("Hoi", Colors.purple, Offset(200, 100));
+    drawText("Hoi", Colors.purple, vel, Offset(200, 100));
 
     // rechthoek
-    // var rechthoek = Rect.fromPoints(Offset(100, 300), Offset(200, 350));
-    // var kleur = regenboogVul(Offset(100, 300), Offset(200, 350));
-    //  vel.drawRect(rechthoek, kleur);
+    var rechthoek = Rect.fromPoints(Offset(100, 300), Offset(200, 350));
+    var kleur = regenboogVul(Offset(100, 300), Offset(200, 350));
+     vel.drawRect(rechthoek, kleur);
 
     // Hieronder niet typen ======================================================================
   }
 
+ // new DateTime.now()
+
   @override
-  bool shouldRepaint(TekenVel old) {
-    return false;
+  bool shouldRepaint(Klok old) {
+    return true;
+  }
+
+  void drawText(String text, Color color, Canvas canvas, Offset offset) {
+    final textStyle = TextStyle(
+      color: color,
+      fontSize: 30,
+    );
+    final textSpan = TextSpan(
+      text: text,
+      style: textStyle,
+    );
+    final textPainter = TextPainter(
+      text: textSpan,
+      textAlign: TextAlign.left,
+      textDirection: TextDirection.ltr,
+    );
+    textPainter.layout(
+      minWidth: 0,
+      maxWidth: 800,
+    );
+
+    textPainter.paint(canvas, offset);
   }
 
   Paint regenboogLijn(Offset offset1, Offset offset2, {int dikte = 4}) {
